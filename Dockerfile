@@ -1,24 +1,22 @@
-FROM python:3.11-slim
+FROM python:3.9-slim
 
 WORKDIR /app
-
-# Set environment variables
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
 
 # Install dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy project
+# Copy application code
 COPY . .
 
-# Create non-root user for security
-RUN useradd -m appuser
-USER appuser
+# Create directories for logs and credentials
+RUN mkdir -p logs credentials
 
 # Expose the port
 EXPOSE 5002
 
+# Set environment variables
+ENV ENVIRONMENT=production
+
 # Run the application
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "5002"]
+CMD ["python", "main.py"]

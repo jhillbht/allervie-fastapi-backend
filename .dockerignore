@@ -1,0 +1,40 @@
+# Version control
+.git
+.github
+.gitignore
+
+# Development files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local configuration
+.env
+.env.*
+!.env.example
+
+# Logs
+logs/
+*.log
+
+# Credentials (will be mounted or injected in production)
+credentials/
+
+# Documentation
+README.md
+CHANGELOG.md
+documentation/
+
+# Editor specific
+.vscode/
+.idea/
+*.swp
+*.swo

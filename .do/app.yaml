@@ -1,0 +1,34 @@
+name: allervie-api
+region: sfo
+services:
+  - name: api
+    github:
+      repo: jhillbht/allervie-fastapi-backend
+      branch: main
+    build_command: pip install -r requirements.txt
+    run_command: python main.py
+    http_port: 5002
+    instance_size: basic-xxs
+    instance_count: 1
+    routes:
+      - path: /
+    envs:
+      - key: ENVIRONMENT
+        value: production
+        scope: RUN_TIME
+      - key: SECRET_KEY
+        value: ${secrets.SECRET_KEY}
+        type: SECRET
+        scope: RUN_TIME
+      - key: GOOGLE_CLIENT_ID
+        value: ${secrets.GOOGLE_CLIENT_ID}
+        type: SECRET
+        scope: RUN_TIME
+      - key: GOOGLE_CLIENT_SECRET
+        value: ${secrets.GOOGLE_CLIENT_SECRET}
+        type: SECRET
+        scope: RUN_TIME
+      - key: CLIENT_CUSTOMER_ID
+        value: ${secrets.CLIENT_CUSTOMER_ID}
+        type: SECRET
+        scope: RUN_TIME
