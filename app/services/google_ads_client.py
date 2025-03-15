@@ -63,16 +63,16 @@ def get_ads_performance(
     Returns:
         Dict[str, Any]: Performance metrics with values and percentage changes
     """
-    if not settings.USE_REAL_ADS_CLIENT or not GOOGLE_ADS_AVAILABLE:
-        logger.warning("Using mock Google Ads performance data")
-        return get_mock_ads_performance(previous_period)
+    if not GOOGLE_ADS_AVAILABLE:
+        logger.error("Google Ads API client not available")
+        raise Exception("Google Ads API client not available. Please install the google-ads package.")
         
     # Get the Google Ads client
     client = get_google_ads_client()
     
     if not client:
-        logger.warning("Google Ads client not available, using mock data")
-        return get_mock_ads_performance(previous_period)
+        logger.error("Google Ads client not available")
+        raise Exception("Failed to create Google Ads client. Please check your credentials.")
         
     try:
         # Set default date range if not provided
@@ -232,12 +232,10 @@ def get_ads_performance(
         }
     except GoogleAdsException as e:
         logger.error(f"Google Ads API error: {e}")
-        # Return mock data as fallback
-        return get_mock_ads_performance(previous_period)
+        raise Exception(f"Google Ads API error: {e}")
     except Exception as e:
         logger.error(f"Error fetching Google Ads performance data: {e}")
-        # Return mock data as fallback
-        return get_mock_ads_performance(previous_period)
+        raise Exception(f"Error fetching Google Ads performance data: {e}")
 
 def calculate_percentage_change(current: float, previous: float) -> float:
     """
@@ -254,49 +252,7 @@ def calculate_percentage_change(current: float, previous: float) -> float:
         return 0
     return round(((current - previous) / previous) * 100, 2)
 
-def get_mock_ads_performance(previous_period: bool = False) -> Dict[str, Any]:
-    """
-    Get mock Google Ads performance data for testing.
-    
-    Args:
-        previous_period: Whether to include previous period data for comparison
-        
-    Returns:
-        Dict[str, Any]: Mock performance metrics
-    """
-    # Base metrics
-    data = {
-        "impressions": {
-            "value": 12345,
-            "change": 15.2 if previous_period else 0
-        },
-        "clicks": {
-            "value": 4321,
-            "change": 8.7 if previous_period else 0
-        },
-        "conversions": {
-            "value": 123,
-            "change": -3.5 if previous_period else 0
-        },
-        "cost": {
-            "value": 1234.56,
-            "change": 5.6 if previous_period else 0
-        },
-        "clickThroughRate": {
-            "value": 3.21,
-            "change": -1.2 if previous_period else 0
-        },
-        "conversionRate": {
-            "value": 2.85,
-            "change": -8.1 if previous_period else 0
-        },
-        "costPerConversion": {
-            "value": 10.04,
-            "change": 7.3 if previous_period else 0
-        }
-    }
-    
-    return data
+# Mock data function removed as we're only using real Google Ads data
 
 def get_ads_performance_with_fallback(
     start_date: Optional[str] = None,
@@ -304,7 +260,7 @@ def get_ads_performance_with_fallback(
     previous_period: bool = False
 ) -> Dict[str, Any]:
     """
-    Get Google Ads performance data with fallback to mock data if real data is not available.
+    Get Google Ads performance data - no fallback as we're only using real data.
     
     Args:
         start_date: Start date in YYYY-MM-DD format (defaults to 30 days ago)
@@ -314,17 +270,7 @@ def get_ads_performance_with_fallback(
     Returns:
         Dict[str, Any]: Performance metrics with values and percentage changes
     """
-    try:
-        # Try to get real data first
-        data = get_ads_performance(start_date, end_date, previous_period)
-        logger.info("Successfully retrieved real Google Ads performance data")
-        return data
-    except Exception as e:
-        logger.error(f"Error fetching real Google Ads performance data: {e}")
-        # Check if mock data is allowed
-        if settings.ALLOW_MOCK_DATA:
-            logger.warning("Using mock Google Ads performance data due to error")
-            return get_mock_ads_performance(previous_period)
-        else:
-            logger.error("Mock data is disabled, returning error")
-            return None
+    # Get real data directly - we don't use mock data anymore
+    data = get_ads_performance(start_date, end_date, previous_period)
+    logger.info("Successfully retrieved Google Ads performance data")
+    return data

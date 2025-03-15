@@ -48,9 +48,9 @@ class Settings(BaseModel):
     CLIENT_CUSTOMER_ID: str = os.getenv("CLIENT_CUSTOMER_ID", "8127539892")
     
     # Feature Flags
-    USE_REAL_ADS_CLIENT: bool = os.getenv("USE_REAL_ADS_CLIENT", "true").lower() == "true"
-    ALLOW_MOCK_DATA: bool = os.getenv("ALLOW_MOCK_DATA", "true").lower() == "true"
-    ALLOW_MOCK_AUTH: bool = os.getenv("ALLOW_MOCK_AUTH", "true").lower() == "true"
+    USE_REAL_ADS_CLIENT: bool = True
+    ALLOW_MOCK_DATA: bool = False
+    ALLOW_MOCK_AUTH: bool = False
     
     # Environment
     ENVIRONMENT: str = os.getenv("ENVIRONMENT", "development")

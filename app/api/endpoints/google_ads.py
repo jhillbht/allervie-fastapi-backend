@@ -40,20 +40,8 @@ async def ads_performance(
     logger.info(f"Parameters: start_date={start_date}, end_date={end_date}, previous_period={previous_period}")
     
     try:
-        # Get the performance data
+        # Get the performance data - only real data, no mock data or fallbacks
         performance_data = get_ads_performance_with_fallback(start_date, end_date, previous_period)
-        
-        if not performance_data:
-            logger.error("No performance data returned from Google Ads API and mock data is disabled")
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail={
-                    "error": "No data available",
-                    "message": "Failed to retrieve Google Ads performance data and mock data is disabled in production mode",
-                    "environment": settings.ENVIRONMENT
-                }
-            )
-            
         logger.info(f"Successfully retrieved Google Ads performance data")
         
         # Return the performance data
@@ -130,23 +118,4 @@ async def test_google_ads_connection(user: User = Depends(get_current_user)):
             'traceback': traceback.format_exc()
         }
 
-@router.get("/use-real-ads-client")
-async def use_real_ads_client(user: User = Depends(get_current_user)):
-    """
-    Set a flag to use the real Google Ads client even with a mock token.
-    
-    Args:
-        user: User object from token
-        
-    Returns:
-        dict: Success message
-    """
-    logger.info(f"Setting flag to use real Google Ads client for user: {user.id}")
-    
-    # Set the global flag in settings
-    settings.USE_REAL_ADS_CLIENT = True
-    
-    return {
-        'status': 'success',
-        'message': 'Now using real Google Ads client with mock token'
-    }
+# Removed use-real-ads-client endpoint as we're always using real data now

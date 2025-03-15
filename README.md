@@ -10,7 +10,7 @@ This is a modernized FastAPI backend for the Allervie Analytics Dashboard, repla
 - **Dependency Injection**: Clean, modular code structure with dependency injection.
 - **Google OAuth Integration**: Authentication via Google OAuth 2.0.
 - **Google Ads API Integration**: Connect to the Google Ads API to retrieve real ad performance data.
-- **Mock Data Support**: Development with mock data when real API credentials aren't available.
+- **Real Data Only**: The application exclusively uses real Google Ads API data for complete authenticity.
 
 ## Getting Started
 
@@ -36,9 +36,6 @@ This is a modernized FastAPI backend for the Allervie Analytics Dashboard, repla
    ```bash
    # Create a .env file with the following variables
    ENVIRONMENT=development
-   USE_REAL_ADS_CLIENT=true
-   ALLOW_MOCK_DATA=true
-   ALLOW_MOCK_AUTH=true
    FRONTEND_URL=http://localhost:3000
    REDIRECT_URI=http://localhost:5002/api/auth/callback
    SECRET_KEY=your-secret-key
@@ -97,15 +94,13 @@ allervie-fastapi-backend/
 - **Modern Async Support**: Built-in async/await support.
 - **Improved Performance**: FastAPI is significantly faster than Flask.
 - **Modern Error Handling**: Standardized error responses.
+- **Real Google Ads Data Only**: Unlike the Flask version, this implementation only uses real Google Ads API data.
 
 ## Environment Variables
 
 | Variable | Description | Default |
 |----------|-------------|---------|
 | `ENVIRONMENT` | Environment (development/production) | development |
-| `USE_REAL_ADS_CLIENT` | Whether to use real Google Ads API | true |
-| `ALLOW_MOCK_DATA` | Allow mock data when real data unavailable | true |
-| `ALLOW_MOCK_AUTH` | Allow mock authentication | true |
 | `FRONTEND_URL` | URL of the frontend application | http://localhost:3000 |
 | `REDIRECT_URI` | OAuth redirect URI | http://localhost:5002/api/auth/callback |
 | `SECRET_KEY` | Secret key for JWT tokens | allervie-dashboard-secret-key |

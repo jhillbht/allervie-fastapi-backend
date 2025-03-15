@@ -196,15 +196,18 @@ async def verify(user: User = Depends(get_current_user)):
     """
     return user
 
-@router.get("/mock-token", response_model=Token)
+@router.get("/mock-token")
 async def mock_token():
     """
-    Create a mock auth token for testing.
+    This endpoint is disabled as mock authentication is not allowed.
     
-    Returns:
-        Token: Mock token
+    Raises:
+        HTTPException: Always raises an exception as mock authentication is disabled
     """
-    return get_mock_token()
+    raise HTTPException(
+        status_code=status.HTTP_403_FORBIDDEN,
+        detail="Mock authentication is disabled. Please use Google OAuth authentication."
+    )
 
 @router.get("/logout")
 async def logout():

@@ -96,12 +96,6 @@ async def get_current_user(token: str = Depends(oauth2_scheme)) -> User:
                 return user
         except Exception:
             pass
-            
-        # Check if it's a mock token
-        for user_id, user_token in TOKENS.items():
-            if user_token.get('access_token') == token:
-                # Return the user
-                return User(**USERS.get(user_id, USERS['google-oauth2|123456789']))
                 
         raise credentials_exception
         
@@ -192,33 +186,9 @@ def get_mock_token() -> Token:
         Token: Mock token
     
     Raises:
-        HTTPException: If mock authentication is disabled
+        HTTPException: Always raises an exception as mock authentication is disabled
     """
-    if settings.ENVIRONMENT == "production" and not settings.ALLOW_MOCK_AUTH:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Mock authentication is disabled in production mode"
-        )
-        
-    # Create a mock user ID
-    user_id = f"google-oauth2|{123456789}"
-    
-    # Create a mock token
-    token_value = f"mock-token-{int(time.time())}"
-    token = {
-        'access_token': token_value,
-        'id_token': user_id,
-        'expires_in': 3600
-    }
-    
-    # Store the token
-    TOKENS[user_id] = token
-    logger.info(f"Created mock OAuth token for user: {user_id}")
-    
-    # Create a Token object
-    return Token(
-        access_token=token_value,
-        token_type="bearer",
-        expires_in=3600,
-        id_token=user_id
+    raise HTTPException(
+        status_code=status.HTTP_403_FORBIDDEN,
+        detail="Mock authentication is disabled. Please use Google OAuth authentication."
     )
